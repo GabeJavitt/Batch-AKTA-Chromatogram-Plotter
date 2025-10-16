@@ -207,17 +207,22 @@ def plot_chromatogram(
     active_axes = [ax1]
     all_lines = []
     all_labels = []
+    # Separate fraction data from other curves
+    fraction_data = curves_data.get('Fractions', {}).get('data')
+    print("Available curves in the file:", curves_data.keys())
+    curves_to_process = requested_curves
+    if not curves_to_process:
+        curves_to_process = []
+        # Find default curves more robustly
+        uv_key = next((key for key in curves_data.keys() if 'UV' in key and isinstance(curves_data[key].get('data'), list)), None)
+        cond_key = next((key for key in curves_data.keys() if 'Cond' in key and isinstance(curves_data[key].get('data'), list)), None)
+        conc_key = next((key for key in curves_data.keys() if 'Conc' in key and isinstance(curves_data[key].get('data'), list)), None)
+        if uv_key: curves_to_process.append(uv_key)
+        if cond_key: curves_to_process.append(cond_key)
+        if conc_key: curves_to_process.append(conc_key)
 
-    if requested_curves:
-        curves_to_plot = requested_curves
-    else:
-        curves_to_plot = []
-        uv_key = next((key for key in curves_data.keys() if 'UV' in key), None)
-        cond_key = next((key for key in curves_data.keys() if 'Cond' in key), None)
-        conc_key = next((key for key in curves_data.keys() if 'Conc' in key), None)
-        if uv_key: curves_to_plot.append(uv_key)
-        if cond_key: curves_to_plot.append(cond_key)
-        if conc_key: curves_to_plot.append(conc_key)
+    # Filter out 'Fractions' from the main plotting loop if it was requested
+    curves_to_plot = [c for c in curves_to_process if c != 'Fractions']
 
     for i, curve_name in enumerate(curves_to_plot):
         if curve_name not in curves_data or 'data' not in curves_data[curve_name]:
@@ -252,18 +257,27 @@ def plot_chromatogram(
         print(f"Warning: No valid curves were plotted for {zip_filename}. Skipping file generation.")
         plt.close(fig)
         return
-
+    
+    # Plot fractions as vertical lines
+    if fraction_data:
+        for volume, label in fraction_data:
+            ax1.axvline(x=volume, color='grey', linestyle='--', linewidth=0.75)
+            ax1.text(volume, 0.02, label, transform=ax1.get_xaxis_transform(), 
+                     rotation=90, ha='right', va='bottom', fontsize=8, color='dimgray')
+            
     if xlim:
         ax1.set_xlim(xlim)
     if ylim:
         ax1.set_ylim(ylim)
 
+    fig.suptitle(f'Chromatogram for {os.path.splitext(zip_filename)[0]}', fontsize=14)
+    ax1.legend(all_lines, [l.get_label() for l in all_lines], loc='upper left')
     
-    plt.title(f'Chromatogram for {os.path.splitext(zip_filename)[0]}')
-    ax1.legend(all_lines, all_labels, loc='upper left')
+    # Manually adjust subplot parameters to prevent clipping
+    fig.subplots_adjust(left=0.1, right=0.85, top=0.9, bottom=0.1)
+    
     plt.savefig(output_path, dpi=300)
     plt.close(fig)
-    fig.tight_layout()
     print(f"Successfully plotted: {zip_filename} -> {os.path.basename(output_path)}")
 
 
