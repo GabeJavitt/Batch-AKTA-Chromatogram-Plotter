@@ -52,4 +52,4 @@ Run the script from your terminal. You must provide an input directory (where yo
 ### Basic Syntax
 
 ```bash
-python batch_chromatogram_plotter.py <path/to/input_folder> <path/to/output_folder> [options]
+python BatchChromatogramPlotter.py <path/to/input_folder> <path/to/output_folder> [options]
