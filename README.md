@@ -60,7 +60,7 @@ python BatchChromatogramPlotter.py <path/to/input_folder> <path/to/output_folder
 # ÄKTA Smart Plotter Pro
 
 A high-performance GUI application designed to automatically batch process ÄKTA UNICORN™ result `.zip` files and generate publication-quality chromatogram plots.
-
+![Example GUI](sample2.png)
 ---
 
 ## Description
