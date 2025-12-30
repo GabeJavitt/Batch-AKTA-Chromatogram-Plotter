@@ -69,6 +69,7 @@ A high-performance GUI application designed to automatically batch process ÄKTA
 
 This tool is ideal for researchers who need to standardize their data visualization for lab notebooks, presentations, and high-impact publications.
 
+![Example Chromatogram Plot](sample3.png)
 ---
 
 ## Features
