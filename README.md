@@ -55,9 +55,7 @@ Run the script from your terminal. You must provide an input directory (where yo
 ```bash
 python BatchChromatogramPlotter.py <path/to/input_folder> <path/to/output_folder> [options]
 
-Here is the corrected and formatted GitHub `README.md` content for your **ÄKTA Smart Plotter Pro**. It follows the professional structure you requested, including the updated filtering logic, high-quality export options, and setup instructions.
-
----
+```
 
 # ÄKTA Smart Plotter Pro
 
